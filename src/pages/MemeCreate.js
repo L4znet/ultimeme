@@ -1,10 +1,8 @@
 import '../App.css';
-import Navbar from "../components/Navbar";
-import MemeItems from "../components/MemeItems";
-import {Link, useLocation, useParams} from "react-router-dom";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
-import {LockClosedIcon} from "@heroicons/react/20/solid";
-import axios from "axios";
+import {auth, db} from '../firebase'
+import {collection, addDoc, Timestamp} from 'firebase/firestore'
 
 const MemeCreate = () => {
 
@@ -13,15 +11,32 @@ const MemeCreate = () => {
     let { id } = useParams();
     const [text0, setText0] = useState("")
     const [text1, setText1] = useState("")
+    let navigate = useNavigate();
+    const saveMeme = async () => {
 
-    const saveMeme = () => {
-        axios.post('https://api.imgflip.com/caption_image', {
-            template_id:id,
-            username:'Laznet',
-            password:'Uzkq24051000',
-            text0:text0,
-            text1:text1,
-        })
+
+        const formData = new FormData()
+
+        formData.append('template_id', id);
+        formData.append('username', 'laznet');
+        formData.append('password', 'Uzkq24051000');
+        formData.append('text0', text0);
+        formData.append('text1', text1);
+
+         fetch('https://api.imgflip.com/caption_image', {
+            mode: 'cors',
+            method: 'POST',
+            body:formData
+        }).then(response => response.json()).then(data => {
+
+             addDoc(collection(db, 'memes'), {
+                 user_id:auth.currentUser.uid,
+                 url_meme: data.data.url,
+                 created: Timestamp.now()
+             }).then(() => {
+                 navigate("/")
+             })
+         })
     }
 
     return (

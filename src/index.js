@@ -25,6 +25,7 @@ import {
 } from "react-router-dom";
 
 import store from './store/store'
+import OwnMemes from "./pages/OwnMemes";
 
 const PrivateRoute = ({ auth: { isAuthenticated }, children }) => {
     const logged = useSelector((state) => state.auth.logged)
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
             {
                 path: "/meme/create/:id",
                 element: <MemeCreate />,
+            },
+            {
+                path: "/yourmemes/:userid",
+                element: <OwnMemes />,
             },
         ],
     },
