@@ -1,5 +1,4 @@
 import MemeItem from "../components/MemeItem";
-import axios from "axios";
 import {useEffect, useState} from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import {auth, db} from "../firebase";
